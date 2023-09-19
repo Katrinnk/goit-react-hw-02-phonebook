@@ -1,4 +1,3 @@
-import CreateContact from 'Forms/CreateContact';
 import ContactList from './List';
 
 const { Component } = require('react');
