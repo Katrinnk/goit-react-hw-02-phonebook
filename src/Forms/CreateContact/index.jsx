@@ -1,5 +1,3 @@
-import { Notify } from 'notiflix';
-
 const { Component } = require('react');
 
 class CreateContact extends Component {
