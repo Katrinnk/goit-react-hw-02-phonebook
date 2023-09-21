@@ -1,6 +1,6 @@
-export const Filter = ({ filterContact }) => {
+export const Filter = ({ changeFilterValue, value }) => {
   const handleChange = ({ target: { value } }) => {
-    filterContact(value);
+    changeFilterValue(value);
   };
   return (
     <div className="mb-3 ms-3 me-3">
@@ -13,6 +13,7 @@ export const Filter = ({ filterContact }) => {
         onChange={handleChange}
         className="form-control"
         id="filterContact"
+        value={value}
       />
     </div>
   );

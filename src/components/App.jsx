@@ -1,24 +1,73 @@
-import ContactList from './List';
-
-const { Component } = require('react');
+import CreateContact from 'Forms/CreateContact';
+import { Filter } from 'Forms/Filter/index';
+import { nanoid } from 'nanoid';
+import { Notify } from 'notiflix';
+import { ContactList } from './List';
+import { Component } from 'react';
 
 const MAIN_STATE = {
   contacts: [
-    // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ],
-  filter: null,
+  filter: '',
 };
 
 class App extends Component {
   state = MAIN_STATE;
 
+  createContactList = contact => {
+    const isAlreadyExist = this.state.contacts.find(
+      el => el.name.toLowerCase() === contact.name.toLowerCase()
+    );
+    if (isAlreadyExist)
+      return Notify.failure('Already exist in your phonebook!');
+
+    const newContact = {
+      ...contact,
+      id: nanoid(),
+    };
+    this.setState(prev => ({
+      contacts: [newContact, ...prev.contacts],
+    }));
+  };
+
+  handleDelete = id => {
+    this.setState(prev => ({
+      contacts: prev.contacts.filter(el => el.id !== id),
+    }));
+  };
+
+  changeFilterValue = filter => {
+    this.setState({ filter });
+  };
+
+  filterContacts = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter(({ name }) => {
+      return name.toLowerCase().includes(filter.toLowerCase());
+    });
+  };
+
   render() {
+    const filteredContacts = this.filterContacts();
     return (
       <>
-        <ContactList state={this.state} />
+        <h1 className="mt-3 ms-3">Phonebook</h1>
+        <CreateContact createContactList={this.createContactList} />
+
+        <h2 className="ms-3">Contacts</h2>
+        <Filter
+          changeFilterValue={this.changeFilterValue}
+          value={this.state.filter}
+        />
+        <ContactList
+          contacts={this.state.contacts}
+          filteredContacts={filteredContacts}
+          handleDelete={this.handleDelete}
+        />
       </>
     );
   }

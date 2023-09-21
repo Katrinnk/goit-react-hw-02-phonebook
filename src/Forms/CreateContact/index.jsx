@@ -3,12 +3,10 @@ import { Notify } from 'notiflix';
 const { Component } = require('react');
 
 class CreateContact extends Component {
-  appState = this.props.state;
-  createContactState = {
+  state = {
     name: '',
     number: '',
   };
-  state = { ...this.appState, ...this.createContactState };
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
@@ -16,11 +14,8 @@ class CreateContact extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.name === 0 || this.state.number === 0) {
-      Notify.info('Please, fill all fields!');
-    }
-    this.props.createContactList(this.state);
-    this.setState({ ...this.appState.state, ...this.createContactState });
+    this.props.createContactList({ ...this.state });
+    this.setState({ name: '', number: '' });
   };
 
   render() {
